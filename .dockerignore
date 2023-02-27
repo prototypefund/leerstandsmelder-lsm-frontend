@@ -1,0 +1,16 @@
+.git
+.dockerignore
+.env
+node_modules/
+vendor/bundle/
+tmp/
+.DS_Store
+README.md
+/Dockerfile
+/env.*
+/log
+/tmp
+/storage
+/cypress
+.github
+/__mocks__

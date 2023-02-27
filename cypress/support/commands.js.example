@@ -1,0 +1,52 @@
+// ***********************************************
+// This example commands.js shows you how to
+// create various custom commands and overwrite
+// existing commands.
+//
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+//
+//
+// -- This is a parent command --
+// Cypress.Commands.add('login', (email, password) => { ... })
+//
+//
+// -- This is a child command --
+// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
+//
+//
+// -- This is a dual command --
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
+//
+//
+// -- This will overwrite an existing command --
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+// HINT: This is where you can write your custom commands which then you can use them in your tests. Fill free to use this login command or remove it and write your own.
+        
+import "cypress-localstorage-commands";
+import { Base64 } from "js-base64";
+
+Cypress.Commands.add('login', callback => {
+    const isAuth = (!(localStorage.getItem('token') === null || localStorage.getItem('token') === ''));
+
+    if (isAuth) {
+        callback();
+        return;
+    }
+
+    cy.request('POST', `${Cypress.env('apiUrl')}/api/v1/auth`, {
+        // HINT: Here We read email and password from `.env` file
+        email: Cypress.env('email'),
+        password: Cypress.env('password')
+    }).then((res) => {
+        const data = res.body.data;
+
+        // HINT: Here we write the token to localStorage and make it persistence
+        cy.setLocalStorage("token", Base64.btoa(Base64.encode(data.accessToken)));
+        cy.saveLocalStorage();
+        callback();
+    })
+}); 

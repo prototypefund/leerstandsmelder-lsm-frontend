@@ -1,0 +1,77 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+@use "./variables" as variables;
+// https://next.vuetifyjs.com/features/sass-variables/
+//@use "vuetify/settings" with (
+@forward "vuetify/settings" with (
+  // $utilities: false,
+  // Place SASS variable overrides here
+  //$body-font-family: (Roboto, "Noto Color Emoji", sans-serif),
+  // $body-font-family: ('Noto Sans', 'Noto Sans JP', 'Noto Sans KR', 'Noto Color Emoji', sans-serif)
+  $font-size-root: variables.$font-size-root,
+  $border-radius-root: variables.$border-radius-root,
+
+  //$border-color-root: rgba(255, 255, 255, 1),
+  //var(--v-primary-base), var(--v-border-opacity)
+  // $border-color: #ff336a,
+  // $font-size-root: 12px;
+  $body-font-family: variables.$body-font-family,
+  $heading-font-family: variables.$heading-font-family,
+  // @import "node_modules/roboto-fontface/css/roboto-condensed/sass/roboto-condensed-fontface.scss";
+  //$material-light: ("background": #ffdde3)
+  // );
+  // @forward "vuetify/dist/component-variables" with (
+  //$button-height: 56px
+  // card
+  $card-background: variables.$card-background,
+  $card-border: (rgba(var(--v-primary-theme), 1), solid, 2px),
+  // list
+  $list-background: transparent,
+
+  //button
+  //$button-border: (rgba(var(--v-primary-base), 1), solid, 2px)
+  //footer
+  $footer-background: transparent,
+  $footer-color: rgba(var(--v-primary-theme), 1),
+  //expansion panels
+  $expansion-panel-background-color: transparent,
+  $expansion-panel-border-color: rgba(255, 255, 133, 1),
+  $expansion-panel-disabled-color: rgba(255, 133, 133, 1),
+  $expansion-panel-color: rgba(var(--v-primary-theme), 1),
+  //table
+  $table-background: transparent,
+  $avatar-border-radius: 4px,
+  $avatar-height: 60px,
+
+  $toolbar-background: transparent
+);
+
+//@import "~vue-maplibre-gl/src/css/maplibre";
+//@import "../sass/_chartist-settings.scss";
+//@import "chartist/dist/scss/chartist.scss";
+// Fix for monospace Font.
+// code,
+// kbd,
+// pre,
+// samp,
+// var {
+//   font-family: "Roboto Mono", monospace !important;
+//   // font-family: 'Noto Sans Mono', monospace !important;
+// }
+
+// Override the variables or import a file that overrides them
+$vt-color-success: #33ffc9;
+$vt-text-color-success: #000;
+
+// Import the regular Vue Toastification stylesheets (or create your own)
+@import "vue-toastification/src/scss/_variables";
+@import "vue-toastification/src/scss/_toastContainer";
+@import "vue-toastification/src/scss/_toast";
+@import "vue-toastification/src/scss/_closeButton";
+@import "vue-toastification/src/scss/_progressBar";
+@import "vue-toastification/src/scss/_icon";
+@import "vue-toastification/src/scss/animations/_bounce";

@@ -1,0 +1,3 @@
+# Leerstand
+
+### ist Stillstand

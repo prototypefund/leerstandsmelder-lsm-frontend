@@ -1,0 +1,20 @@
+{
+  "data": {
+    "email": "admin@domain.org",
+    "uid": "admin@domain.org",
+    "id": "1054921c-8abd-4b60-8ad8-039887f7cd0e",
+    "role": "admin",
+    "group_id": "a4af6966-3f5b-458e-8a46-0f96d0b08101",
+    "authentication_token": null,
+    "provider": "email",
+    "allow_password_change": false,
+    "nickname": "Admin",
+    "confirmed": false,
+    "blocked": false,
+    "message_me": false,
+    "notify": false,
+    "share_email": false,
+    "accept_terms": false,
+    "legacy_id": null
+  }
+}

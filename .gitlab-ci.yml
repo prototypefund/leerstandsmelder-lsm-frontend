@@ -1,0 +1,154 @@
+stages:
+  - build
+  - test
+  - publish
+  - deploy
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+  CYPRESS_BASE_URL: "https://leerstandsmelder.gitlab.io/lsm-frontend/"
+  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+  TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .cache/*
+    - cache/Cypress
+    - node_modules
+    - build
+
+.base:
+  image: cypress/browsers:node16.18.0-chrome107-ff106-edge
+  cache:
+    paths:
+      - .npm
+      - cache/Cypress
+  before_script:
+    - yarn install
+
+.base_minimal:
+  image: alpine:latest
+  cache: {}
+
+pages:
+  # this job will deploy the built site to GitLab Pages
+  # https://docs.gitlab.com/ee/user/project/pages/
+  extends: .base
+  stage: build
+  only:
+    - main
+  cache:
+    paths:
+      - .npm
+      - cache/Cypress
+  script:
+    # build the static site for publishing
+    - yarn build
+    - mkdir -p public
+    - cp -r dist/* public
+    # workaround from "Support for single page applications route all requests to index.html.":
+    # https://gitlab.com/gitlab-org/gitlab-pages/-/issues/23
+    - cp public/index.html public/404.html
+
+  artifacts:
+    paths:
+      # folder to be deployed
+      - public
+
+lint:
+  extends: .base
+  stage: build
+  #only:
+  # - main
+  script:
+    - yarn lint
+
+test:unit:
+  extends: .base
+  stage: test
+  only:
+    #- main
+    - production
+  script:
+    - yarn test:unit
+  artifacts:
+    paths:
+      - dist/
+      - node_modules/
+      - package.json
+
+test:e2e:
+  extends: .base
+  stage: test
+  only:
+    # - main
+    - production
+  script:
+    # check Cypress binary path and cached versions
+    # useful to make sure we are not carrying around old versions
+    - npx cypress cache path
+    - npx cypress cache list
+    - yarn cy:verify
+    - yarn cy:info
+    - npx cypress run --browser firefox --config baseUrl=$CI_PAGES_URL
+  artifacts:
+    when: always
+    paths:
+      - cypress/videos/**/*.mp4
+      - cypress/screenshots/**/*.png
+    expire_in: 1 day
+
+publish:
+  image: docker:latest
+  stage: publish
+  # only:
+  #   - main
+  services:
+    - docker:latest
+  before_script:
+    - docker info
+  script:
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker push $TAG_COMMIT
+    - docker push $TAG_LATEST
+
+deploy:
+  extends: .base_minimal
+  stage: deploy
+  when: manual
+  tags:
+    - deployment
+  script:
+    - chmod og= $ID_RSA
+    - apk update && apk add openssh-client
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $TAG_COMMIT"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f lsm_stats || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd server && docker compose up -d --no-deps --build lsm_stats"
+    # - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 80:80 --name lsm-server $TAG_COMMIT"
+  environment:
+    name: staging
+    url: https://dev.leerstandsmeldung.de/
+
+deploy:staging:
+  extends: .base
+  stage: deploy
+  only:
+    - staging
+  script:
+    - echo "Deploying to Staging..."
+
+deploy:production:
+  extends: .base
+  stage: deploy
+  when: manual
+  environment:
+    name: production
+    url: https://dev.leerstndsmeldung.de
+  only:
+    - production
+  script:
+    - echo "Deploying to Production..."

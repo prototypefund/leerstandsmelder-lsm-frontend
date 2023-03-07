@@ -11,11 +11,11 @@
           </v-col>
           <v-col cols="2">
             <v-radio-group v-model="filterField">
-              <template v-slot:label>
+              <template #label>
                 <div>Sortierung nach Building type</div>
               </template>
               <v-radio value="building_type">
-                <template v-slot:label>
+                <template #label>
                   <div>
                     {{ $t("locations.building_type") }}
                   </div>
@@ -34,7 +34,7 @@
           <v-col cols="2">
             <v-radio-group v-model="filterField">
               <v-radio value="owner">
-                <template v-slot:label>
+                <template #label>
                   <div>
                     {{ $t("locations.owner") }}
                   </div>

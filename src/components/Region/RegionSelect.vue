@@ -45,7 +45,7 @@
         <v-list-item-title
           >{{ item.title }} <v-chip>{{ item.locations }}</v-chip>
         </v-list-item-title>
-        <template v-slot:append>
+        <template #append>
           <v-btn
             v-if="regionData.id != item.id"
             color="grey-lighten-1"

@@ -43,8 +43,8 @@
               <div class="mb-5"></div>
               <v-btn
                 color="primary"
-                @click.prevent="onPublish(place.id)"
                 class="full"
+                @click.prevent="onPublish(place.id)"
               >
                 <v-icon icon="mdi-home"></v-icon>
                 {{ $t("actions.submit") }}</v-btn
@@ -52,8 +52,8 @@
               <v-btn
                 v-if="displayForm"
                 color="primary"
-                @click.prevent="onPreview(place.id)"
                 variant="outlined"
+                @click.prevent="onPreview(place.id)"
               >
                 <v-icon icon="mdi-eye"></v-icon>
                 {{ $t("actions.preview") }}</v-btn

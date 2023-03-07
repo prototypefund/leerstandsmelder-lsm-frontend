@@ -40,7 +40,7 @@
     <v-divider v-if="images && images.length > 0"></v-divider>
     <v-row no-gutters>
       <v-col cols="12" md="8" class="divider">
-        <v-card-subtitle class="pt-4 text-h6" v-if="!place.sensitive">
+        <v-card-subtitle v-if="!place.sensitive" class="pt-4 text-h6">
           <v-icon icon="mdi-map-marker" size="small"></v-icon>
           <span class="me-1"
             >{{ place.road }}, {{ place.zip }} {{ place.city }}</span

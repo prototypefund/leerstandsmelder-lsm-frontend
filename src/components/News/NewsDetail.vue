@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-5" v-if="article">
+  <v-card v-if="article" class="ma-5">
     <v-card-title
       ><h2 class="text-h3">{{ article.title }}</h2></v-card-title
     >

@@ -3,30 +3,30 @@
     <v-card-actions v-if="editor">
       <v-toolbar>
         <v-btn
-          @click="editor.chain().focus().toggleBold().run()"
           :disabled="!editor.can().chain().focus().toggleBold().run()"
           :class="{ 'is-active': editor.isActive('bold') }"
+          @click="editor.chain().focus().toggleBold().run()"
         >
           bold
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleItalic().run()"
           :disabled="!editor.can().chain().focus().toggleItalic().run()"
           :class="{ 'is-active': editor.isActive('italic') }"
+          @click="editor.chain().focus().toggleItalic().run()"
         >
           italic
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleStrike().run()"
           :disabled="!editor.can().chain().focus().toggleStrike().run()"
           :class="{ 'is-active': editor.isActive('strike') }"
+          @click="editor.chain().focus().toggleStrike().run()"
         >
           strike
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleCode().run()"
           :disabled="!editor.can().chain().focus().toggleCode().run()"
           :class="{ 'is-active': editor.isActive('code') }"
+          @click="editor.chain().focus().toggleCode().run()"
         >
           code
         </v-btn>
@@ -37,68 +37,68 @@
           clear nodes
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().setParagraph().run()"
           :class="{ 'is-active': editor.isActive('paragraph') }"
+          @click="editor.chain().focus().setParagraph().run()"
         >
           paragraph
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
         >
           h1
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
         >
           h2
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
         >
           h3
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
         >
           h4
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
         >
           h5
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
         >
           h6
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleBulletList().run()"
           :class="{ 'is-active': editor.isActive('bulletList') }"
+          @click="editor.chain().focus().toggleBulletList().run()"
         >
           bullet list
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleOrderedList().run()"
           :class="{ 'is-active': editor.isActive('orderedList') }"
+          @click="editor.chain().focus().toggleOrderedList().run()"
         >
           ordered list
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleCodeBlock().run()"
           :class="{ 'is-active': editor.isActive('codeBlock') }"
+          @click="editor.chain().focus().toggleCodeBlock().run()"
         >
           code block
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().toggleBlockquote().run()"
           :class="{ 'is-active': editor.isActive('blockquote') }"
+          @click="editor.chain().focus().toggleBlockquote().run()"
         >
           blockquote
         </v-btn>
@@ -109,14 +109,14 @@
           hard break
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().undo().run()"
           :disabled="!editor.can().chain().focus().undo().run()"
+          @click="editor.chain().focus().undo().run()"
         >
           undo
         </v-btn>
         <v-btn
-          @click="editor.chain().focus().redo().run()"
           :disabled="!editor.can().chain().focus().redo().run()"
+          @click="editor.chain().focus().redo().run()"
         >
           redo
         </v-btn>

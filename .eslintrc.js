@@ -10,6 +10,7 @@ module.exports = {
     "Map_option_api_running.vue",
     "ImageCropper.vue",
     "**/vendor/*.js",
+    "App.vue",
   ],
   rules: {
     // override/add rules settings here, such as:

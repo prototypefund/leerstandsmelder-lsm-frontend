@@ -111,6 +111,12 @@ publish:
     - docker info
   script:
     - docker build -t $TAG_COMMIT -t $TAG_LATEST .
+      --build-arg VITE_API_URL=$VITE_API_URL
+      --build-arg VITE_TITLE=$VITE_TITLE
+      --build-arg VITE_GEOAPIFY_KEY=$VITE_GEOAPIFY_KEY
+      --build-arg VITE_MAPTILER_KEY=$VITE_MAPTILER_KEY
+      --build-arg VITE_MAPTILER_MAP_LIGHT=$VITE_MAPTILER_MAP_LIGHT
+      --build-arg VITE_MAPTILER_MAP_DARK=$VITE_MAPTILER_MAP_DARK
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST

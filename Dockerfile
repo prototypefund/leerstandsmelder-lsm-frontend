@@ -26,6 +26,7 @@ ENV VITE_MAPTILER_MAP_DARK=${VITE_MAPTILER_MAP_DARK:-zzz}
 # RUN apt-get update && apt-get upgrade -y
 WORKDIR /app
 RUN echo ${VITE_API_URL}
+RUN echo ${VITE_TITLE}
 RUN node --version
 COPY package*.json ./
 RUN yarn install

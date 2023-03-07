@@ -55,7 +55,7 @@
         </v-list-item>
       </v-list>
       <v-footer class="mb-12 text-disabled text-subtitle-2"
-        ><small> version_pwa: {{ appVersion }} </small></v-footer
+        ><small> version: {{ appVersion }} </small></v-footer
       >
     </v-navigation-drawer>
     <Loader :visible="loading" />

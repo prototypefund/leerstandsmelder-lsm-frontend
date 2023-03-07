@@ -191,7 +191,7 @@
         <component :is="Component" :key="route.path" />
       </router-view>
 
-      <ReloadPrompt />
+      <ReloadPWA />
     </v-main>
 
     <v-footer class="d-flex flex-column text-center">
@@ -273,7 +273,7 @@ import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
 import ThemeSwitcher from "@/components/ThemeSwitcher.vue";
 import RegionSelect from "@/components/Region/RegionSelect.vue";
 
-import ReloadPrompt from "@/components/ReloadPrompt.vue";
+import ReloadPWA from "@/components/ReloadPWA.vue";
 
 export default {
   name: "App",
@@ -282,7 +282,7 @@ export default {
     LocaleSwitcher,
     ThemeSwitcher,
     RegionSelect,
-    ReloadPrompt,
+    ReloadPWA,
   },
   data: () => ({
     topBarAbsoulte: false,

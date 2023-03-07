@@ -13,14 +13,14 @@
     <div class="buttons flex align-middle mt-2 md:mt-0">
       <button
         v-if="needRefresh"
-        @click="updateServiceWorker()"
         class="w-full px-4 py-2 text-sm text-white leading-none transition-colors duration-150 bg-pink-900 border border-white rounded sm:w-auto active:bg-pink-600 hover:bg-pink-700 focus:outline-none focus:shadow-outline-purple mr-4"
+        @click="updateServiceWorker()"
       >
         Reload
       </button>
       <button
-        @click="close"
         class="w-full px-4 py-2 text-sm text-white leading-none transition-colors duration-150 bg-pink-900 border border-white rounded sm:w-auto active:bg-pink-600 hover:bg-pink-700 focus:outline-none focus:shadow-outline-purple"
+        @click="close"
       >
         Close
       </button>
@@ -57,14 +57,6 @@ export default defineComponent({
     };
     return { offlineReady, needRefresh, updateServiceWorker, close };
   },
-  methods: {
-    async close() {
-      this.offlineReady.value = false;
-      this.needRefresh.value = false;
-    },
-    async updateServiceWorker() {
-      await updateServiceWorker();
-    },
-  },
+  methods: {},
 });
 </script>

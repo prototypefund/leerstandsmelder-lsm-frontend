@@ -55,7 +55,7 @@
         </v-list-item>
       </v-list>
       <v-footer class="mb-12 text-disabled text-subtitle-2"
-        ><small> version: {{ appVersion }} </small></v-footer
+        ><small> version_pwa: {{ appVersion }} </small></v-footer
       >
     </v-navigation-drawer>
     <Loader :visible="loading" />
@@ -288,7 +288,7 @@ export default {
     topBarAbsoulte: false,
     sideNav: false,
     appName: import.meta.env.VITE_TITLE,
-    appVersion: window.__APP_VERSION__,
+    appVersion: __APP_VERSION__,
     activeRegion: null,
     bottom_link: true,
     links: ["about", "imprint", "terms", "howto", "press", "dataprotection"],

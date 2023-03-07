@@ -1,49 +1,45 @@
 <template>
-  <div
+  <v-dialog
     v-if="offlineReady || needRefresh"
-    class="flex flex-wrap md:flex-nowrap bg-pink-900 text-white text-sm px-6 py-2 justify-between align-middle"
-    role="alert"
+    v-model="dialog"
+    location="bottom center"
+    class="start-prompt"
   >
-    <div class="message mt-1">
-      <span v-if="offlineReady"> App ready to work offline </span>
-      <span v-else>
-        New content available, click on reload button to update.
-      </span>
-    </div>
-    <div class="buttons flex align-middle mt-2 md:mt-0">
-      <button
-        v-if="needRefresh"
-        class="w-full px-4 py-2 text-sm text-white leading-none transition-colors duration-150 bg-pink-900 border border-white rounded sm:w-auto active:bg-pink-600 hover:bg-pink-700 focus:outline-none focus:shadow-outline-purple mr-4"
-        @click="updateServiceWorker()"
-      >
-        Reload
-      </button>
-      <button
-        class="w-full px-4 py-2 text-sm text-white leading-none transition-colors duration-150 bg-pink-900 border border-white rounded sm:w-auto active:bg-pink-600 hover:bg-pink-700 focus:outline-none focus:shadow-outline-purple"
-        @click="close"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-  <div
-    v-if="!offlineReady"
-    class="flex flex-wrap md:flex-nowrap bg-pink-900 text-white text-sm px-6 py-2 justify-between align-middle"
-    role="alert"
-  >
-    Not Offline ready
-  </div>
-  <div
-    v-if="!needRefresh"
-    class="flex flex-wrap md:flex-nowrap bg-pink-900 text-white text-sm px-6 py-2 justify-between align-middle"
-    role="alert"
-  >
-    No refresh
-  </div>
+    <v-container>
+      <v-row class="align-right justify-center">
+        <v-col cols="12" md="6" sm="8" xs="12" class="modal-background">
+          <v-card>
+            <v-card-text>
+              <div class="text-h5">
+                <span v-if="offlineReady"> App ready to work offline </span>
+                <span v-else>
+                  New content available, click on reload button to update.
+                </span>
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                v-if="true || needRefresh"
+                class="action-primary"
+                color="primary"
+                variant="outlined"
+                @click="UpdateAndClose()"
+              >
+                Reload
+              </v-btn>
+              <v-btn color="primary" variant="outlined" @click="close">
+                Close
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { useRegisterSW } from "virtual:pwa-register/vue";
 const { updateServiceWorker } = useRegisterSW();
 
@@ -54,8 +50,23 @@ export default defineComponent({
     const close = async () => {
       offlineReady.value = false;
       needRefresh.value = false;
+      dialog.value = false;
     };
-    return { offlineReady, needRefresh, updateServiceWorker, close };
+    const UpdateAndClose = async () => {
+      updateServiceWorker();
+      offlineReady.value = false;
+      needRefresh.value = false;
+      dialog.value = false;
+    };
+    const dialog = ref(offlineReady || needRefresh);
+    return {
+      offlineReady,
+      needRefresh,
+      updateServiceWorker,
+      close,
+      dialog,
+      UpdateAndClose,
+    };
   },
   methods: {},
 });

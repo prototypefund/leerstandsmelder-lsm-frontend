@@ -231,6 +231,10 @@
   }
 }
 
+.start-prompt .v-overlay__content {
+  bottom: 0px;
+}
+
 .v-theme--lsmLightTheme {
   .modal-background .v-card,
   .modal-background .v-alert,
@@ -356,8 +360,15 @@
 }
 
 .v-btn.action {
-  color: white !important;
-  background-color: black !important;
+  color: rgb(var(--v-theme-surface)) !important;
+
+  background-color: rgb(var(--v-theme-surface_invert)) !important;
+  text-transform: none;
+}
+.v-btn.action-primary {
+  font-family: "chaneyregular", sans-serif !important;
+  color: rgb(var(--v-theme-surface)) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
   text-transform: none;
 }
 

@@ -24,7 +24,9 @@
     "abort": "Abort",
     "close": "Close",
     "more": "Load more",
-    "back": "Back"
+    "back": "Back",
+    "update_available": "New version available, click on reload button to update.",
+    "reload": "Reload"
   },
   "table": {
     "rowsPerPage": "Rows per page",

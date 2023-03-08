@@ -12,7 +12,7 @@
             <v-card-text>
               <div class="text-h5">
                 <span v-if="needRefresh">
-                  New content available, click on reload button to update.
+                  {{ $t("actions.update_available") }}
                 </span>
               </div>
             </v-card-text>
@@ -24,10 +24,10 @@
                 variant="outlined"
                 @click="UpdateAndClose()"
               >
-                Reload
+                {{ $t("actions.reload") }}
               </v-btn>
               <v-btn color="primary" variant="outlined" @click="close">
-                Close
+                {{ $t("actions.close") }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -47,6 +47,7 @@ export default defineComponent({
   name: "ReloadPWA",
   setup() {
     const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW();
+    console.log("setup pwa needRefresh:", needRefresh);
     const close = async () => {
       offlineReady.value = false;
       needRefresh.value = false;
@@ -58,7 +59,7 @@ export default defineComponent({
       needRefresh.value = false;
       dialog.value = false;
     };
-    const dialog = ref(offlineReady || needRefresh);
+    const dialog = ref(needRefresh);
     return {
       offlineReady,
       needRefresh,

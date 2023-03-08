@@ -24,7 +24,9 @@
     "abort": "Afbreken",
     "close": "Sluiten",
     "more": "Laad meer",
-    "back": "Terug"
+    "back": "Terug",
+    "update_available": "New version available, click on reload button to update.",
+    "reload": "Reload"
   },
   "table": {
     "rowsPerPage": "Rijen per pagina",

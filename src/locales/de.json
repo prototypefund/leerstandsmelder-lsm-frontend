@@ -26,7 +26,9 @@
     "abort": "Abbrechen",
     "close": "Schliessen",
     "more": "Weitere Einträge laden",
-    "back": "Zurück"
+    "back": "Zurück",
+    "update_available": "Eine aktualisierte Version ist verfügbar. Klicke auf den Neuladen Knopf zum aktualisieren.",
+    "reload": "Neuladen"
   },
   "table": {
     "rowsPerPage": "Einträge pro Seite",

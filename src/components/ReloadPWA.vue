@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-if="offlineReady || needRefresh"
+    v-if="needRefresh"
     v-model="dialog"
     location="bottom center"
     class="start-prompt"
@@ -11,15 +11,14 @@
           <v-card>
             <v-card-text>
               <div class="text-h5">
-                <span v-if="offlineReady"> App ready to work offline </span>
-                <span v-else>
+                <span v-if="needRefresh">
                   New content available, click on reload button to update.
                 </span>
               </div>
             </v-card-text>
             <v-card-actions>
               <v-btn
-                v-if="true || needRefresh"
+                v-if="needRefresh"
                 class="action-primary"
                 color="primary"
                 variant="outlined"
@@ -36,6 +35,7 @@
       </v-row>
     </v-container>
   </v-dialog>
+  <!-- v-icon v-if="offlineReady" icon="mdi-information"></v-icon-->
 </template>
 
 <script lang="ts">

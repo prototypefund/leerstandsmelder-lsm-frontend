@@ -1,5 +1,12 @@
 <template>
-  <v-btn icon="mdi-theme-light-dark" @click="toggleTheme"></v-btn>
+  <v-btn
+    icon="mdi-theme-light-dark"
+    @click="toggleTheme"
+    variant="outlined"
+    class="on-surface"
+    size="small"
+    density="comfortable"
+  ></v-btn>
 </template>
 
 <script>

@@ -1,7 +1,13 @@
 <template>
   <div class="locale-switcher">
-    <v-btn id="lang-switch">
-      <v-icon left>mdi-translate</v-icon>
+    <v-btn
+      id="lang-switch"
+      variant="outlined"
+      size="small"
+      class="on-surface"
+      density="comfortable"
+    >
+      <v-icon left>mdi-web</v-icon>
       {{ $t("site.lang_" + lang) }}
       <v-icon small right>mdi-menu-down</v-icon>
     </v-btn>

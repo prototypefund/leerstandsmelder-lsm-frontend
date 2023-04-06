@@ -23,6 +23,7 @@ const routes = [
     meta: {
       title: "site.subnav.home",
       requiresAuth: false,
+      always: true,
     },
   },
   {
@@ -56,6 +57,68 @@ const routes = [
     },
   },
 
+  {
+    path: "/chart",
+    name: "chart",
+    icon: "mdi-chart-line",
+    title: "menu.statistic",
+    component: Chart,
+    meta: {
+      title: "menu.statistic",
+      requiresAuth: true,
+      requiresRole: "admin",
+    },
+  },
+  // {
+  //   path: "/div",
+  //   name: "divider-admin",
+  //   title: "site.subnav.information",
+  //   meta: {
+  //     requiresAuth: false,
+  //   },
+  // },
+  {
+    path: "/map",
+    name: "map",
+    icon: "mdi-map",
+    title: "menu.map",
+    component: Map,
+    meta: {
+      title: "menu.map",
+      always: true,
+    },
+  },
+  {
+    name: "map-show",
+    path: "/map/:slug",
+    component: Map,
+    props: true,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: "/form",
+    name: "form",
+    icon: "mdi-pencil",
+    title: "menu.form",
+    component: Form,
+    meta: {
+      title: "menu.form",
+      requiresAuth: true,
+      always: true,
+    },
+  },
+  {
+    path: "/form/:slug",
+    name: "form-detail",
+    icon: "mdi-pencil",
+    component: Form,
+    meta: {
+      title: "menu.form_edit",
+      requiresAuth: true,
+    },
+  },
   {
     path: "/login",
     name: "login",
@@ -130,67 +193,6 @@ const routes = [
     },
   },
 
-  {
-    path: "/chart",
-    name: "chart",
-    icon: "mdi-chart-line",
-    title: "menu.statistic",
-    component: Chart,
-    meta: {
-      title: "menu.statistic",
-      requiresAuth: true,
-      requiresRole: "admin",
-    },
-  },
-  // {
-  //   path: "/div",
-  //   name: "divider-admin",
-  //   title: "site.subnav.information",
-  //   meta: {
-  //     requiresAuth: false,
-  //   },
-  // },
-  {
-    path: "/map",
-    name: "map",
-    icon: "mdi-map",
-    title: "menu.map",
-    component: Map,
-    meta: {
-      title: "menu.map",
-      content: true,
-    },
-  },
-  {
-    name: "map-show",
-    path: "/map/:slug",
-    component: Map,
-    props: true,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: "/form",
-    name: "form",
-    icon: "mdi-pencil",
-    title: "menu.form",
-    component: Form,
-    meta: {
-      title: "menu.form",
-      requiresAuth: true,
-    },
-  },
-  {
-    path: "/form/:slug",
-    name: "form-detail",
-    icon: "mdi-pencil",
-    component: Form,
-    meta: {
-      title: "menu.form_edit",
-      requiresAuth: true,
-    },
-  },
   {
     path: "/div2",
     name: "divider-admin",

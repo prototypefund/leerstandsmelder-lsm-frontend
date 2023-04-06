@@ -8,49 +8,68 @@
       temporary
       location="left"
       width="300"
-      style="z-index: 11111"
+      style="z-index: 11111; border-radius: 0 !important"
+      class="rounded-0"
     >
-      <v-toolbar flat color="primary">
-        <v-list>
-          <v-list-item>
-            <v-toolbar-title class="headline text-uppercase">
-              <span>((</span>
-              <span>Leerstand</span>
-              <span class="font-weight-light">{{ appName }}</span>
-              <span>))</span>
-            </v-toolbar-title>
-          </v-list-item>
-        </v-list>
+      <v-toolbar flat>
+        <v-btn
+          variant="outlined"
+          icon="mdi-close"
+          size="small"
+          class="rounded-xl on-surface ml-5 mr-5"
+          @click.stop="sideNav = !sideNav"
+        ></v-btn>
+        <v-spacer></v-spacer>
       </v-toolbar>
+      <v-row class="ma-1">
+        <v-col
+          class="nav-list"
+          :cols="getCols(item)"
+          v-for="item in menuItems"
+          :key="item.title"
+        >
+          <v-btn
+            variant="outlined"
+            :to="item.path"
+            class="rounded-sm on-surface"
+            v-if="item.component && !item.meta.content"
+          >
+            <template #prepend>
+              <v-icon :icon="item.icon"></v-icon>
+            </template>
+            <v-badge v-if="item.badge" color="red" :content="item.badge" inline>
+              <span>{{ $t(item.title) }}</span>
+            </v-badge>
+            <span v-else>{{ $t(item.title) }}</span>
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-divider></v-divider>
       <v-list>
-        <div v-for="item in menuItems" :key="item.title">
-          <v-list-item v-if="item.component" :to="item.path">
-            <template #prepend>
-              <v-icon :icon="item.icon"></v-icon>
+        <div v-for="item in menuContent" :key="item.title">
+          <v-list-group v-if="item.child" :value="item.title">
+            <template v-slot:activator="{ props }">
+              <v-list-item v-bind="props">{{ $t(item.title) }}</v-list-item>
             </template>
-            <v-badge v-if="item.badge" color="red" :content="item.badge" inline>
-              <span>{{ $t(item.title) }}</span>
-            </v-badge>
-            <v-list-item-title v-else>{{ $t(item.title) }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item v-if="item.href" :href="item.path">
-            <template #prepend>
-              <v-icon :icon="item.icon"></v-icon>
-            </template>
-            <v-badge v-if="item.badge" color="red" :content="item.badge" inline>
-              <span>{{ $t(item.title) }}</span>
-            </v-badge>
-            <v-list-item-title v-else>{{ $t(item.title) }}</v-list-item-title>
-          </v-list-item>
-          <v-divider v-if="!item.component && !item.href"></v-divider>
-          <v-list-subheader v-if="!item.component && !item.href">{{
+            <v-list-item
+              v-for="(subitem, i) in item.child"
+              :key="i"
+              :value="subitem.title"
+              :to="subitem.path"
+              class="rounded-0"
+              >{{ $t(subitem.title) }}</v-list-item
+            >
+          </v-list-group>
+          <v-list-item v-if="!item.child" :value="item.title" :to="item.path">{{
             $t(item.title)
-          }}</v-list-subheader>
+          }}</v-list-item>
         </div>
 
         <v-divider></v-divider>
         <v-list-item>
           <locale-switcher :locales="['en', 'de', 'nl']"></locale-switcher>
+        </v-list-item>
+        <v-list-item>
           <theme-switcher />
         </v-list-item>
       </v-list>
@@ -285,7 +304,6 @@ export default {
     ReloadPWA,
   },
   data: () => ({
-    topBarAbsoulte: false,
     sideNav: false,
     appName: import.meta.env.VITE_TITLE,
     appVersion: __APP_VERSION__,
@@ -296,16 +314,17 @@ export default {
     selection: null,
     absolute: false,
     loader_visible: "loading",
-    content_routes: [
-      "about",
-      "claim",
-      "definition",
-      "glossar",
-      "participate",
-      "press",
-      "help",
-      "contact",
-    ],
+
+    content_routes: {
+      about: ["project", "network", "history", "opensource", "partner"],
+      claim: ["general", "regional"],
+      definition: ["definition", "legal", "term", "reasons", "harm", "spot"],
+      perspective: ["experience", "theory"],
+      participate: ["how", "material", "idea", "donation"],
+      press: [],
+      support: ["howto", "faq", "goodtoknow"],
+      contact: ["contact", "dataprotection", "terms", "imprint"],
+    },
   }),
   computed: {
     ...mapState("news", ["news"]),
@@ -318,9 +337,70 @@ export default {
     isLoggedIn: function () {
       return this.$store.getters["auth/isLoggedIn"];
     },
+    menuContent: function () {
+      var routes = [];
+      var mdRoutes = [];
+
+      Object.keys(this.content_routes).forEach((rut) => {
+        var subrut = this.content_routes[rut];
+        var key = "site-" + rut + "_" + this.language;
+        var element = [];
+        element = this.$router.options.routes.find((x) => {
+          //console.log("find X", x);
+          if (x.meta.key === key) {
+            return x;
+          }
+        });
+        console.log("check element", key, element, subrut);
+        if (element == undefined) {
+          element = [];
+          element["meta"] = [];
+        }
+        //if (element) {
+        element["title"] = "menu.content_menu." + rut;
+
+        element["id"] = rut;
+        element["icon"] = "mdi-text";
+        element["meta"]["title"] = "menu.content_menu." + rut;
+
+        if (subrut.length > 0) {
+          element["child"] = [];
+          subrut.forEach((srut) => {
+            var skey = "site-" + rut + "-" + srut + "_" + this.language;
+            var subelement = this.$router.options.routes.find((x) => {
+              console.log("find X", x, skey);
+              if (x.meta.key === skey) {
+                console.log("found X", x, skey);
+                return x;
+              }
+            });
+            if (subelement) {
+              subelement["title"] = "menu.content_menu." + rut + "-" + srut;
+              subelement["id"] = rut + "-" + srut;
+              subelement["icon"] = "mdi-text";
+              subelement["meta"]["title"] =
+                "menu.content_menu." + rut + "-" + srut;
+              //mdRoutes.push(mdRoute);
+              element["child"].push(subelement);
+            }
+          });
+        }
+        mdRoutes.push(element);
+        //}
+      });
+      console.log("menuItemsRoutesContent", mdRoutes);
+
+      // mdRoutes.sort(
+      //   (a, b) =>
+      //     this.content_routes.indexOf(a["id"]) -
+      //     this.content_routes.indexOf(b["id"])
+      // );
+      return [...mdRoutes];
+    },
     menuItems: function () {
       var routes = [];
       var mdRoutes = [];
+      console.log("menuItemsRoutes", this.$router.options.routes);
       for (var i in this.$router.options.routes) {
         var route = this.$router.options.routes[i];
 
@@ -328,13 +408,15 @@ export default {
         if (Object.prototype.hasOwnProperty.call(route, "title")) {
           if (
             (Object.prototype.hasOwnProperty.call(route, "meta") &&
+              Object.prototype.hasOwnProperty.call(route, "component") &&
+              !Object.prototype.hasOwnProperty.call(route.meta, "content") &&
               Object.prototype.hasOwnProperty.call(
                 route.meta,
                 "requiresAuth"
               ) &&
               ((route.meta.requiresAuth === false && !this.isLoggedIn) ||
                 (route.meta.requiresAuth === true && this.isLoggedIn))) ||
-            Object.prototype.hasOwnProperty.call(route.meta, "content")
+            Object.prototype.hasOwnProperty.call(route.meta, "always")
           ) {
             if (
               Object.prototype.hasOwnProperty.call(route.meta, "requiresRole")
@@ -352,26 +434,22 @@ export default {
             }
           }
         } else if (Object.prototype.hasOwnProperty.call(route, "children")) {
-          let mdRoute = route.children[0];
-          this.content_routes.forEach((rut) => {
-            if (mdRoute.name == "site-" + rut + "_" + this.language) {
-              mdRoute["title"] = "menu.content_menu." + rut;
-              mdRoute["path"] = route.path;
-              mdRoute["id"] = rut;
-              mdRoute["icon"] = "mdi-text";
-              mdRoute["meta"]["title"] = "menu.content_menu." + rut;
-              mdRoutes.push(mdRoute);
-              return;
-            }
-          });
+          // let mdRoute = route.children[0];
+          // this.content_routes.forEach((rut) => {
+          //   if (mdRoute.name == "site-" + rut + "_" + this.language) {
+          //     mdRoute["title"] = "menu.content_menu." + rut;
+          //     mdRoute["path"] = route.path;
+          //     mdRoute["id"] = rut;
+          //     mdRoute["icon"] = "mdi-text";
+          //     mdRoute["meta"]["title"] = "menu.content_menu." + rut;
+          //     //mdRoutes.push(mdRoute);
+          //     return;
+          //   }
+          // });
         }
       }
-      mdRoutes.sort(
-        (a, b) =>
-          this.content_routes.indexOf(a["id"]) -
-          this.content_routes.indexOf(b["id"])
-      );
-      return [...routes, ...mdRoutes];
+
+      return [...routes];
     },
   },
   watch: {
@@ -415,6 +493,17 @@ export default {
           }
         });
       });
+    },
+    getCols(item) {
+      if (
+        item.name == "form" ||
+        item.name == "register" ||
+        item.name == "login"
+      ) {
+        return 12;
+      } else {
+        return 6;
+      }
     },
     getSiteLink(link) {
       const lang = this.language;

@@ -211,6 +211,22 @@
 .v-navigation-drawer.v-navigation-drawer--absolute.v-navigation-drawer--open {
   z-index: 8888;
 }
+
+.v-navigation-drawer {
+  .v-list-item {
+    text-transform: uppercase;
+  }
+  .v-list-group__items {
+    .v-list-item {
+      text-transform: none;
+    }
+    .v-list-item--active {
+      font-weight: bold;
+      background: none;
+    }
+  }
+}
+
 .logo {
   line-height: 20px;
   padding-top: 10px;
@@ -382,6 +398,21 @@ a.call {
   padding: 10px;
   border-radius: 35px;
   text-decoration: none;
+}
+
+.nav-list {
+  .v-btn {
+    height: calc(var(--v-btn-height) + 30px);
+    overflow-wrap: break-word;
+    grid-template-columns: max-content auto max-content;
+    width: 100%;
+
+    .v-btn__content {
+      overflow-wrap: break-word;
+      white-space: unset;
+      overflow: hidden;
+    }
+  }
 }
 
 p {

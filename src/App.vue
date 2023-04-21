@@ -31,7 +31,7 @@
           <v-btn
             variant="outlined"
             :to="item.path"
-            class="rounded-sm on-surface"
+            :class="getClass(item)"
             v-if="item.component && !item.meta.content"
           >
             <template #prepend>
@@ -498,11 +498,21 @@ export default {
       if (
         item.name == "form" ||
         item.name == "register" ||
+        item.name == "chart" ||
+        item.name.includes("admin") ||
+        item.name.includes("Style") ||
         item.name == "login"
       ) {
         return 12;
       } else {
         return 6;
+      }
+    },
+    getClass(item) {
+      if (item.name == "form") {
+        return "highlight rounded-sm on-surface";
+      } else {
+        return "rounded-sm on-surface";
       }
     },
     getSiteLink(link) {

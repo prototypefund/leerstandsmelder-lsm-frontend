@@ -415,6 +415,13 @@ a.call {
   }
 }
 
+.highlight.on-surface {
+  border: 2px solid rgb(var(--v-theme-primary)) !important;
+  font-family: "chaneyregular", sans-serif !important;
+
+  color: rgb(var(--v-theme-primary)) !important;
+}
+
 p {
   margin-bottom: 1rem;
 }

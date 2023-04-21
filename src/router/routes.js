@@ -57,18 +57,6 @@ const routes = [
     },
   },
 
-  {
-    path: "/chart",
-    name: "chart",
-    icon: "mdi-chart-line",
-    title: "menu.statistic",
-    component: Chart,
-    meta: {
-      title: "menu.statistic",
-      requiresAuth: true,
-      requiresRole: "admin",
-    },
-  },
   // {
   //   path: "/div",
   //   name: "divider-admin",
@@ -97,6 +85,7 @@ const routes = [
       requiresAuth: false,
     },
   },
+
   {
     path: "/form",
     name: "form",
@@ -119,6 +108,19 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/chart",
+    name: "chart",
+    icon: "mdi-chart-line",
+    title: "menu.statistic",
+    component: Chart,
+    meta: {
+      title: "menu.statistic",
+      requiresAuth: true,
+      requiresRole: "admin",
+    },
+  },
+
   {
     path: "/login",
     name: "login",

@@ -3,22 +3,160 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="4">
-          <span class="small">{{ place.id }}</span>
-          <h2 class="text-h2">
+          <!--span class="small">{{ place.id }}</span-->
+          <h4 class="text-h4">
             {{ $t("locations.location") }}
-          </h2>
-          <h1 class="text-h1" style="word-wrap: break-word">
+          </h4>
+          <h2 class="text-h2" style="word-wrap: break-word">
             {{ place.title }}
-          </h1>
+          </h2>
           <br />
           <br />
           <br />
+          <v-btn
+            prepend-icon="mdi-pencil"
+            variant="plain"
+            v-if="!showTitle"
+            @click="showTitle = !showTitle"
+            >eigenen Title festlegen</v-btn
+          >
+          <v-btn
+            icon="mdi-close"
+            variant="plain"
+            v-if="showTitle"
+            @click="showTitle = !showTitle"
+          ></v-btn>
           <v-text-field
             v-model="place.title"
             :label="$t('locations.title')"
             :counter="80"
             required
+            v-if="showTitle"
           ></v-text-field>
+
+          <v-text-field
+            v-model="place.vacant_since"
+            :label="$t('locations.empty_for')"
+            prepend-icon="mdi-calendar-account"
+            type="date"
+            class="mt-6"
+          ></v-text-field>
+
+          <v-expansion-panels class="mb-6 mt-6">
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                <v-icon icon="mdi-image"> </v-icon>
+                {{ $t("locations.images") }}
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                {{ $t("actions.choose_images") }}
+                <v-divider></v-divider>
+                <div v-if="progressInfos">
+                  <div
+                    v-for="(progressInfo, index) in progressInfos"
+                    :key="index"
+                    class="mb-2"
+                  >
+                    <span>{{ progressInfo.fileName }}</span>
+                    <v-progress-linear
+                      v-model="progressInfo.percentage"
+                      color="light-blue"
+                      height="25"
+                      reactive
+                    >
+                      <strong>{{ progressInfo.percentage }} %</strong>
+                    </v-progress-linear>
+                  </div>
+                </div>
+
+                <v-row no-gutters justify="center" align="center">
+                  <v-col cols="8">
+                    <v-file-input
+                      v-model="selectedFiles"
+                      accept="image/*"
+                      multiple
+                      show-size
+                      :label="$t('actions.choose_image')"
+                    ></v-file-input>
+                  </v-col>
+
+                  <v-col cols="4" class="pl-2">
+                    <v-btn variant="outlined" @click="uploadFiles">
+                      <v-icon right dark>mdi-cloud-upload</v-icon>
+                      {{ $t("actions.upload") }}
+                    </v-btn>
+                  </v-col>
+                </v-row>
+
+                <v-alert
+                  v-if="message"
+                  border="left"
+                  color="teal"
+                  outlined
+                  class="multi-line"
+                >
+                  {{ message }}
+                </v-alert>
+
+                <div v-if="images && images.length > 0" class="mx-auto">
+                  <v-list>
+                    <v-list-subheader
+                      >List of Images: {{ images.length }}</v-list-subheader
+                    >
+
+                    <v-list-item
+                      v-for="limage in images"
+                      :key="limage.id"
+                      rounded="xl"
+                      style="margin-bottom: 15px"
+                    >
+                      <v-list-item-title>
+                        <v-row>
+                          <v-col cols="6"
+                            ><v-img
+                              :src="limage.image_url || limage.url"
+                              :alt="limage.name"
+                              width="200px"
+                            />
+                            <p>{{ limage.title }}</p></v-col
+                          >
+                          <v-col cols="6"
+                            ><v-btn class="mt-12" @click="editImage(limage)">
+                              <v-icon icon="mdi-marker"></v-icon> </v-btn
+                            ><v-btn
+                              class="mt-12"
+                              label="delete"
+                              @click="deleteImage(limage)"
+                            >
+                              <v-icon icon="mdi-delete-empty"></v-icon> </v-btn
+                          ></v-col>
+                        </v-row>
+                      </v-list-item-title>
+                      <v-divider></v-divider>
+                    </v-list-item>
+                  </v-list>
+                </div>
+                <v-overlay
+                  v-model="overlay"
+                  contained
+                  class="edit-dialog align-center justify-center"
+                  rounded="xl"
+                >
+                  <v-btn
+                    variant="outlined"
+                    class="align-self-end justify-self-end"
+                    @click="overlay = false"
+                  >
+                    <v-icon icon="mdi-close"></v-icon>
+                  </v-btn>
+                  <ImageForm
+                    v-model="image"
+                    @form-close="closeImageForm()"
+                  ></ImageForm>
+                </v-overlay>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
 
           <v-switch
             v-model="place.published"
@@ -31,17 +169,11 @@
             />
           </div>
 
-          <v-text-field
-            v-model="place.vacant_since"
-            :label="$t('locations.empty_for')"
-            prepend-icon="mdi-calendar-account"
-            type="date"
-          ></v-text-field>
-
           <v-row no-gutters>
             <v-col>
               <div class="mb-5"></div>
               <v-btn
+                v-if="!displayForm"
                 color="primary"
                 class="full"
                 @click.prevent="onPublish(place.id)"
@@ -56,7 +188,7 @@
                 @click.prevent="onPreview(place.id)"
               >
                 <v-icon icon="mdi-eye"></v-icon>
-                {{ $t("actions.preview") }}</v-btn
+                {{ $t("actions.next") }}</v-btn
               >
               <v-btn
                 v-if="!displayForm"
@@ -65,7 +197,7 @@
                 @click.prevent="onPreview(place.id)"
               >
                 <v-icon icon="mdi-eye-off"></v-icon>
-                {{ $t("actions.preview") }}</v-btn
+                {{ $t("actions.back") }}</v-btn
               >
 
               <v-btn variant="outlined" @click="reset()">{{
@@ -211,16 +343,16 @@
           <v-expansion-panels class="mb-6">
             <v-expansion-panel>
               <v-expansion-panel-title>
-                <v-icon icon="mdi-home-plus"> </v-icon>
-                {{ $t("locations.building") }}
+                <v-icon icon="mdi-bell"> </v-icon>
+                {{ $t("locations.notification") }}
               </v-expansion-panel-title>
               <v-expansion-panel-text>
-                <div class="text-h6">{{ $t("locations.building_type") }}</div>
-                {{ $t("locations.building_type_explain") }}
+                <div class="text-h6">{{ $t("locations.usage") }}</div>
+                {{ $t("locations.usage_explain") }}
                 <FormControlButtonList
-                  :value="place.building_type"
-                  field="building_type"
-                  :options="optionBuildingType"
+                  :value="place.building_usage"
+                  field="building_usage"
+                  :options="optionBuildingUsage"
                   @select-value="setFieldValue"
                 />
                 <hr />
@@ -236,12 +368,22 @@
                   ></v-radio>
                 </v-radio-group>
                 <hr />
-                <div class="text-h6">{{ $t("locations.usage") }}</div>
-                {{ $t("locations.usage_explain") }}
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          <v-expansion-panels class="mb-6">
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                <v-icon icon="mdi-home-plus"> </v-icon>
+                {{ $t("locations.building") }}
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <div class="text-h6">{{ $t("locations.building_type") }}</div>
+                {{ $t("locations.building_type_explain") }}
                 <FormControlButtonList
-                  :value="place.building_usage"
-                  field="building_usage"
-                  :options="optionBuildingUsage"
+                  :value="place.building_type"
+                  field="building_type"
+                  :options="optionBuildingType"
                   @select-value="setFieldValue"
                 />
                 <hr />
@@ -288,6 +430,48 @@
           <v-expansion-panels class="mb-6">
             <v-expansion-panel>
               <v-expansion-panel-title>
+                <v-icon icon="mdi-list-status"> </v-icon>
+                {{ $t("locations.status") }}
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                {{ $t("locations.status_explain") }}
+                <v-row>
+                  <v-col cols="12" md="12">
+                    <FormControlButtonList
+                      :value="comment.status"
+                      field="status"
+                      :single="true"
+                      :options="optionStatus"
+                      @select-value="setFieldValueComment"
+                    />
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+
+          <v-expansion-panels class="mb-6">
+            <v-expansion-panel>
+              <v-expansion-panel-title>
+                <v-icon icon="mdi-text"> </v-icon>
+                {{ $t("locations.description") }}
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                {{ $t("locations.description_explain") }}
+                <v-textarea
+                  v-model="place.text"
+                  class="mt-6 rounded-sm"
+                  :label="$t('locations.description')"
+                  :counter="210"
+                  variant="outlined"
+                ></v-textarea>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+
+          <v-expansion-panels class="mb-6">
+            <v-expansion-panel>
+              <v-expansion-panel-title>
                 <v-icon icon="mdi-home-account"> </v-icon>
                 {{ $t("locations.owner") }}
               </v-expansion-panel-title>
@@ -315,139 +499,7 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
-          <v-expansion-panels class="mb-6">
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                <v-icon icon="mdi-text"> </v-icon>
-                {{ $t("locations.description") }}
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                {{ $t("locations.description_explain") }}
-                <v-textarea
-                  v-model="place.text"
-                  class="mt-6 rounded-sm"
-                  :label="$t('locations.description')"
-                  :counter="210"
-                  variant="outlined"
-                ></v-textarea>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
-          <v-expansion-panels class="mb-6">
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                <v-icon icon="mdi-image"> </v-icon>
-                {{ $t("locations.images") }}
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                {{ $t("actions.choose_images") }}
-                <v-divider></v-divider>
-                <div v-if="progressInfos">
-                  <div
-                    v-for="(progressInfo, index) in progressInfos"
-                    :key="index"
-                    class="mb-2"
-                  >
-                    <span>{{ progressInfo.fileName }}</span>
-                    <v-progress-linear
-                      v-model="progressInfo.percentage"
-                      color="light-blue"
-                      height="25"
-                      reactive
-                    >
-                      <strong>{{ progressInfo.percentage }} %</strong>
-                    </v-progress-linear>
-                  </div>
-                </div>
 
-                <v-row no-gutters justify="center" align="center">
-                  <v-col cols="8">
-                    <v-file-input
-                      v-model="selectedFiles"
-                      accept="image/*"
-                      multiple
-                      show-size
-                      :label="$t('actions.choose_image')"
-                    ></v-file-input>
-                  </v-col>
-
-                  <v-col cols="4" class="pl-2">
-                    <v-btn variant="outlined" @click="uploadFiles">
-                      <v-icon right dark>mdi-cloud-upload</v-icon>
-                      {{ $t("actions.upload") }}
-                    </v-btn>
-                  </v-col>
-                </v-row>
-
-                <v-alert
-                  v-if="message"
-                  border="left"
-                  color="teal"
-                  outlined
-                  class="multi-line"
-                >
-                  {{ message }}
-                </v-alert>
-
-                <div v-if="images && images.length > 0" class="mx-auto">
-                  <v-list>
-                    <v-list-subheader
-                      >List of Images: {{ images.length }}</v-list-subheader
-                    >
-
-                    <v-list-item
-                      v-for="limage in images"
-                      :key="limage.id"
-                      rounded="xl"
-                      style="margin-bottom: 15px"
-                    >
-                      <v-list-item-title>
-                        <v-row>
-                          <v-col cols="6"
-                            ><v-img
-                              :src="limage.image_url || limage.url"
-                              :alt="limage.name"
-                              width="200px"
-                            />
-                            <p>{{ limage.title }}</p></v-col
-                          >
-                          <v-col cols="6"
-                            ><v-btn class="mt-12" @click="editImage(limage)">
-                              <v-icon icon="mdi-marker"></v-icon> </v-btn
-                            ><v-btn
-                              class="mt-12"
-                              label="delete"
-                              @click="deleteImage(limage)"
-                            >
-                              <v-icon icon="mdi-delete-empty"></v-icon> </v-btn
-                          ></v-col>
-                        </v-row>
-                      </v-list-item-title>
-                      <v-divider></v-divider>
-                    </v-list-item>
-                  </v-list>
-                </div>
-                <v-overlay
-                  v-model="overlay"
-                  contained
-                  class="edit-dialog align-center justify-center"
-                  rounded="xl"
-                >
-                  <v-btn
-                    variant="outlined"
-                    class="align-self-end justify-self-end"
-                    @click="overlay = false"
-                  >
-                    <v-icon icon="mdi-close"></v-icon>
-                  </v-btn>
-                  <ImageForm
-                    v-model="image"
-                    @form-close="closeImageForm()"
-                  ></ImageForm>
-                </v-overlay>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
           <v-expansion-panels v-if="place.versions" class="mb-6">
             <v-expansion-panel>
               <v-expansion-panel-title>
@@ -552,6 +604,7 @@ export default {
 
   data() {
     return {
+      showTitle: false,
       tagInput: null,
       inProgress: false,
       errors: {},
@@ -571,6 +624,7 @@ export default {
       optionBuildingUsage: useOptions().optionBuildingUsage,
       optionBuildingPart: useOptions().optionBuildingPart,
       optionOwner: useOptions().optionOwner,
+      optionStatus: useOptions().optionStatus,
     };
   },
   created() {
@@ -582,6 +636,7 @@ export default {
     ...mapState("regions", ["regions", "active"]),
     ...mapState("locations", ["locations"]),
     ...mapState("place", ["place", "status"]),
+    ...mapState("comment", ["comment"]),
     ...mapGetters("place", ["images"]),
     ...mapGetters("auth", ["isLoggedIn", "isAdmin"]),
 
@@ -696,6 +751,15 @@ export default {
         this.toast.error("Image could not be deleted");
         console.log("error in delete", error);
       }
+    },
+    setFieldValueComment(val, fieldName, single) {
+      const { comment } = useFieldArray({
+        value: val,
+        fieldName: fieldName,
+        object: this.comment,
+        single: single,
+      });
+      this.comment = comment;
     },
     setFieldValue(val, fieldName, single) {
       const { place } = useFieldArray({

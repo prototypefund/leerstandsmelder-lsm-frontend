@@ -188,6 +188,9 @@
   "locations": {
     "manage_locations": "Leerstände verwalten",
     "new_locations": "Neuste Leerstände",
+    "notification": "Meldung",
+    "status": "Aktueller Stand",
+    "status_explain": "Wie ist der aktuelle Status zu dem Leerstand",
     "address": "Adresse",
     "building": "Gebäude",
     "building_type": "Gebäudeart",

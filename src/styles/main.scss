@@ -517,9 +517,9 @@ p {
 }
 
 h1 {
-  //@include main.text-h1;
-  //  @include typography("h1");
-  // @extend .text-h1;
+  //@include .text-h1;
+  //@include typography("h1");
+  //@extend .text-h1;
 }
 
 .text-h2 {
@@ -542,6 +542,72 @@ h1 {
 .text-h6 {
   font-size: 1.1rem !important;
   letter-spacing: 1.25px !important;
+}
+
+// this is not DRY ... waiting for vuetify @extend
+
+h1 {
+  font-size: 6rem !important;
+  font-weight: 300;
+  line-height: 6rem;
+  letter-spacing: -0.015625em !important;
+  font-family: "chaneyregular", sans-serif !important;
+  text-transform: none !important;
+}
+
+h2 {
+  font-size: 3.45rem !important;
+  font-weight: 300;
+  line-height: 3.75rem;
+  letter-spacing: -0.0083333333em !important;
+  font-family: "chaneyregular", sans-serif !important;
+  text-transform: none !important;
+}
+h3 {
+  font-size: 2.84rem !important;
+  font-weight: 400;
+  line-height: 3.125rem;
+  letter-spacing: normal !important;
+  font-family: "chaneyregular", sans-serif !important;
+  text-transform: none !important;
+}
+
+h4 {
+  font-size: 1.8rem !important;
+  color: rgb(var(--v-theme-primary));
+  font-weight: 400;
+  line-height: 2.5rem;
+  letter-spacing: 0.0073529412em !important;
+  font-family: "chaneyregular", sans-serif !important;
+  text-transform: none !important;
+}
+
+h5 {
+  font-size: 1.25rem !important;
+  letter-spacing: 1.1px !important;
+  font-weight: 400;
+  line-height: 2rem;
+  font-family: "chaneyregular", sans-serif !important;
+  text-transform: none !important;
+}
+
+h6 {
+  font-size: 1.1rem !important;
+  letter-spacing: 1.25px !important;
+  font-weight: 500;
+  line-height: 2rem;
+  font-family: "chaneyregular", sans-serif !important;
+  text-transform: none !important;
+}
+
+//.text-body-1
+p {
+  font-size: 1rem !important;
+  font-weight: 400;
+  line-height: 1.5rem;
+  letter-spacing: 0.03125em !important;
+  font-family: "atkinsonregular", sans-serif !important;
+  text-transform: none !important;
 }
 
 .v-avatar {

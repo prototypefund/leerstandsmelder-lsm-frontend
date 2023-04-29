@@ -14,6 +14,7 @@ import Toast, { POSITION } from "vue-toastification";
 
 import "@/styles/fonts.scss";
 //import "@/styles/settings.scss";
+import "vuetify/styles";
 import "@/styles/main.scss";
 
 import router from "./router";
